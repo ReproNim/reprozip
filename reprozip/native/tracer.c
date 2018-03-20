@@ -709,17 +709,7 @@ int fork_and_trace(const char *binary, int argc, char **argv,
 
     /* Open log file */
     {
-        char logfilename[4096];
-        const char *home = getenv("HOME");
-        if(!home || !home[0])
-        {
-            log_critical(0, "couldn't open log file: $HOME not set");
-            restore_signals();
-            return 1;
-        }
-        strcpy(logfilename, home);
-        strcat(logfilename, "/.reprozip/log");
-        if(log_open_file(logfilename) != 0)
+        if(log_open_file("rztracer.log") != 0)
         {
             restore_signals();
             return 1;
