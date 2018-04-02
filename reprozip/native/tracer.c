@@ -671,7 +671,9 @@ static void trace_init(void)
 }
 
 int fork_and_trace(const char *binary, int argc, char **argv,
-                   const char *database_path, int *exit_status)
+                   const char *database_path,
+                   const char *logfile_path,
+                   int *exit_status)
 {
     pid_t child;
 
@@ -709,7 +711,7 @@ int fork_and_trace(const char *binary, int argc, char **argv,
 
     /* Open log file */
     {
-        if(log_open_file("rztracer.log") != 0)
+        if(log_open_file(logfile_path) != 0)
         {
             restore_signals();
             return 1;

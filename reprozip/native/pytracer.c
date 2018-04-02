@@ -64,6 +64,8 @@ static PyObject *pytracer_execute(PyObject *self, PyObject *args)
 
     /* Reads arguments */
     char *binary = NULL, *databasepath = NULL;
+    char logfilename[4096];
+    const char *home = getenv("HOME");
     char **argv = NULL;
     size_t argv_len;
     int verbosity;
@@ -88,6 +90,15 @@ static PyObject *pytracer_execute(PyObject *self, PyObject *args)
     databasepath = get_string(py_databasepath);
     if(databasepath == NULL)
         goto done;
+
+    if(!home || !home[0])
+    {
+        PyErr_SetString(Err_Base, "couldn't open log file: $HOME not set");
+        ret = PyLong_FromLong(1);
+        return ret;
+    }
+    strcpy(logfilename, home);
+    strcat(logfilename, "/.reprozip/log");
 
     /* Converts argv from Python list to char[][] */
     {
@@ -118,7 +129,7 @@ static PyObject *pytracer_execute(PyObject *self, PyObject *args)
         argv[argv_len] = NULL;
     }
 
-    if(fork_and_trace(binary, argv_len, argv, databasepath, &exit_status) == 0)
+    if(fork_and_trace(binary, argv_len, argv, databasepath, logfilename, &exit_status) == 0)
     {
         ret = PyLong_FromLong(exit_status);
     }
