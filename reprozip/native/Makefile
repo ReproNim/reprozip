@@ -5,7 +5,8 @@ LDFLAGS = -L/usr/lib/x86_64-linux-gnu
 LDLIBS = -lsqlite3 -ldl -lreadline -lm
 
 rztracer: rztracer.c libtracer.a
-	$(CC) $(CFLAGS) -o $@ $^ -static $(LDFLAGS) $(LDLIBS) -pthread
+	$(CC) $(CFLAGS) -o $@ $^ -static $(LDFLAGS) $(LDLIBS) -pthread && \
+	strip $@
 
 libtracer.a: log.o utils.o tracer.o database.o syscalls.o ptrace_utils.o
 	$(AR) cr $@ $^
