@@ -4,6 +4,9 @@ CFLAGS = -g -O2 -Wall
 LDFLAGS = -L/usr/lib/x86_64-linux-gnu
 LDLIBS = -lsqlite3 -ldl -lreadline -lm
 
+rztracer.gz: rztracer
+	gzip $^
+
 rztracer: rztracer.c libtracer.a
 	$(CC) $(CFLAGS) -o $@ $^ -static $(LDFLAGS) $(LDLIBS) -pthread && \
 	strip $@
